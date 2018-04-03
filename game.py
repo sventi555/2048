@@ -10,9 +10,21 @@ start_board = [[0, 0, 0, 0],
 def display_grid(grid):
     print('_________________')
     for row in grid[:-1]:
-        print('| {0} | {1} | {2} | {3} |'.format(row[0], row[1], row[2], row[3]))
+        for item in row:
+            print('|', end=' ')
+            if item == 0:
+                print(' ', end=' ')
+            else:
+                print('{0}'.format(item), end=' ')
+        print('|')
         print('| -   -   -   - |')
-    print('| {0} | {1} | {2} | {3} |'.format(grid[-1][0], grid[-1][1], grid[-1][2], grid[-1][3]))
+    for item in grid[-1]:
+        print('|', end=' ')
+        if item == 0:
+            print(' ', end=' ')
+        else:
+            print('{0}'.format(item), end=' ')
+    print('|')
     print(chr(0x00af)*17)
 
 
@@ -41,26 +53,26 @@ def make_transpose(board):
 
 
 def slide(dir, board):
-    if dir == 'r' or dir == 'l':
+    if dir == 'd' or dir == 'a':
         new_board = copy.deepcopy(board)
         for row in new_board:
             num_zeros = row.count(0)
             for i in range(num_zeros):
                 row.remove(0)
             for i in range(num_zeros):
-                if dir == 'l':
+                if dir == 'a':
                     row.append(0)
                 else:
                     row.insert(0, 0)
         return new_board
-    if dir == 'u' or dir == 'd':
+    if dir == 'w' or dir == 's':
         transpose = make_transpose(board)
         for row in transpose:
             num_zeros = row.count(0)
             for i in range(num_zeros):
                 row.remove(0)
             for i in range(num_zeros):
-                if dir == 'u':
+                if dir == 'w':
                     row.append(0)
                 else:
                     row.insert(0, 0)
@@ -69,7 +81,7 @@ def slide(dir, board):
 
 def combine(dir, board):
     new_board = copy.deepcopy(board)
-    if dir == 'r':
+    if dir == 'd':
         i = 3
         while i >= 1:
             for row in new_board:
@@ -78,7 +90,7 @@ def combine(dir, board):
                     row[i-1] = 0
             i -= 1
         return new_board
-    if dir == 'l':
+    if dir == 'a':
         i = 0
         while i <= 2:
             for row in new_board:
@@ -88,7 +100,7 @@ def combine(dir, board):
             i += 1
         return new_board
     transpose = make_transpose(board)
-    if dir == 'd':
+    if dir == 's':
         i = 3
         while i >= 1:
             for row in transpose:
@@ -97,7 +109,7 @@ def combine(dir, board):
                     row[i - 1] = 0
             i -= 1
         return make_transpose(transpose)
-    if dir == 'u':
+    if dir == 'w':
         i = 0
         while i <= 2:
             for row in transpose:
@@ -109,22 +121,26 @@ def combine(dir, board):
 
 
 def operate(board):
-    dir = input('provide a direction to swipe: one of "r", "l", "u", or "d". Press "q" to quit')
+    dir = input('provide a direction to swipe: one of "w", "a", "s", or "d". Press "q" to quit')
     if dir == 'q':
         return
-    old_board = copy.deepcopy(board)
-    new_board = slide(dir, combine(dir, slide(dir, old_board)))
-    if not add_number(new_board):
-        print('game over!')
-        display_grid(new_board)
-        return
-    elif new_board != old_board:
-        new_board = add_number(new_board)
-        display_grid(new_board)
-        return new_board
+    elif dir == 'w' or dir == 'a' or dir == 's' or dir == 'd':
+        old_board = copy.deepcopy(board)
+        new_board = slide(dir, combine(dir, slide(dir, old_board)))
+        if not add_number(new_board):
+            print('game over!')
+            display_grid(new_board)
+            return
+        elif new_board != old_board:
+            new_board = add_number(new_board)
+            display_grid(new_board)
+            return new_board
+        else:
+            display_grid(new_board)
+            return new_board
     else:
-        display_grid(new_board)
-        return new_board
+        display_grid(board)
+        return board
 
 
 def play_game():

@@ -2,9 +2,9 @@ import random
 import copy
 
 start_board = [[0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0]]
+               [0, 0, 0, 0],
+               [0, 0, 0, 0],
+               [0, 0, 0, 0]]
 
 
 def display_grid(grid):

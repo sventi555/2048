@@ -158,8 +158,6 @@ def game_over(board):
         return False
 
 
-
-
 class Cell:
     def __init__(self, row, col, num):
         self.x = row
@@ -216,7 +214,3 @@ root.geometry("400x400")
 app = Application(master=root)
 root.bind("<Key>", change_board)
 app.mainloop()
-
-
-
-
